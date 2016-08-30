@@ -178,7 +178,7 @@ public class ArcMenu extends ViewGroup implements OnClickListener {
                 t = getMeasuredHeight() - height;
                 break;
         }
-        mCButton.layout(l, t, l + width, t + width);
+        mCButton.layout(l, t, l + width, t + height);
     }
 
     @Override
@@ -294,7 +294,7 @@ public class ArcMenu extends ViewGroup implements OnClickListener {
     /**
      * 添加menuItem的点击动画
      *
-     * @param i
+     * @param pos
      */
     private void menuItemAnim(int pos) {
         for (int i = 0; i < getChildCount() - 1; i++) {
