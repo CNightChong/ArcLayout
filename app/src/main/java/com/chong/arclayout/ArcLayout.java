@@ -333,16 +333,16 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
             animationSet.addAnimation(tranAnim);
             childView.startAnimation(animationSet);
 
+            // 子菜单点击
             final int pos = i + 1;
             childView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mMenuItemClickListener != null)
+                    if (mMenuItemClickListener != null) {
                         mMenuItemClickListener.onItemClick(childView, pos);
-
-                    menuItemAnim(pos - 1);
+                    }
                     changeStatus();
-
+                    menuItemAnim(pos - 1);
                 }
             });
         }
@@ -358,12 +358,11 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
     private void menuItemAnim(int pos) {
         for (int i = 0; i < getChildCount() - 1; i++) {
 
-            View childView = getChildAt(i + 1);
+            final View childView = getChildAt(i + 1);
             if (i == pos) {
-                childView.startAnimation(scaleBigAnim(300));
+                childView.startAnimation(scaleBigAnim(300, childView));
             } else {
-
-                childView.startAnimation(scaleSmallAnim(300));
+                childView.startAnimation(scaleSmallAnim(300, childView));
             }
 
             childView.setClickable(false);
@@ -373,7 +372,7 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
 
     }
 
-    private Animation scaleSmallAnim(int duration) {
+    private Animation scaleSmallAnim(int duration, final View view) {
 
         AnimationSet animationSet = new AnimationSet(true);
 
@@ -381,6 +380,24 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                 0.5f);
         AlphaAnimation alphaAnim = new AlphaAnimation(1f, 0.0f);
+        scaleAnim.setAnimationListener(new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (mCurrentStatus == Status.CLOSE) {
+                    view.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         animationSet.addAnimation(scaleAnim);
         animationSet.addAnimation(alphaAnim);
         animationSet.setDuration(duration);
@@ -395,13 +412,31 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
      * @param duration
      * @return
      */
-    private Animation scaleBigAnim(int duration) {
+    private Animation scaleBigAnim(int duration, final View view) {
         AnimationSet animationSet = new AnimationSet(true);
 
         ScaleAnimation scaleAnim = new ScaleAnimation(1.0f, 4.0f, 1.0f, 4.0f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                 0.5f);
         AlphaAnimation alphaAnim = new AlphaAnimation(1f, 0.0f);
+        scaleAnim.setAnimationListener(new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (mCurrentStatus == Status.CLOSE) {
+                    view.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         animationSet.addAnimation(scaleAnim);
         animationSet.addAnimation(alphaAnim);
@@ -416,8 +451,7 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
      * 切换菜单状态
      */
     private void changeStatus() {
-        mCurrentStatus = (mCurrentStatus == Status.CLOSE ? Status.OPEN
-                : Status.CLOSE);
+        mCurrentStatus = (mCurrentStatus == Status.CLOSE ? Status.OPEN : Status.CLOSE);
     }
 
     public boolean isOpen() {

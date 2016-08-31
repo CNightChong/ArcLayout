@@ -2,7 +2,6 @@ package com.chong.arclayout;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -45,8 +44,10 @@ public class MainActivity extends Activity {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                if (mArcLayout.isOpen())
-                    mArcLayout.toggleMenu(600);
+                if (mArcLayout.isOpen()) {
+                    mIvMain.setImageResource(R.drawable.shequ_img_sent);
+                    mArcLayout.toggleMenu(300);
+                }
             }
         });
 
@@ -54,15 +55,16 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(View view, int pos) {
                 Toast.makeText(MainActivity.this, pos + ":" + view.getTag(), Toast.LENGTH_SHORT).show();
+                mIvMain.setImageResource(R.drawable.shequ_img_sent);
             }
         });
         mArcLayout.setOnMainMenuItemClickListener(new ArcLayout.OnMainMenuItemClickListener() {
             @Override
             public void onMainClick(View view, ArcLayout.Status status) {
                 if (status == ArcLayout.Status.CLOSE) {
-                    mIvMain.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.shequ_img_sent));
+                    mIvMain.setImageResource(R.drawable.shequ_img_sent);
                 } else {
-                    mIvMain.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.shequ_ic_fatie_guanbi));
+                    mIvMain.setImageResource(R.drawable.shequ_ic_fatie_guanbi);
                 }
             }
         });
