@@ -1,15 +1,13 @@
 <com.chong.arcmenudemo.ArcMenu xmlns:android="http://schemas.android.com/apk/res/android"
                                xmlns:app="http://schemas.android.com/apk/res-auto"
-                               android:id="@+id/id_menu"
                                android:layout_width="wrap_content"
                                android:layout_height="wrap_content"
-                               android:paddingBottom="50dp"
-                               android:paddingRight="50dp"
-                               app:position="right_bottom"
-                               app:radius="140dp">
+                               android:paddingRight="20dp"
+                               android:paddingTop="20dp"
+                               app:position="right_top"
+                               app:radius="120dp">
 
     <ImageView
-        android:id="@+id/iv_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/shequ_img_sent"/>
@@ -37,11 +35,5 @@
         android:layout_height="wrap_content"
         android:src="@drawable/composer_thought"
         android:tag="Sun"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/composer_with"
-        android:tag="People"/>
 
 </com.chong.arcmenudemo.ArcMenu>
