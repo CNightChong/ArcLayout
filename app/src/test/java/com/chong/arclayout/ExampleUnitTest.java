@@ -1,4 +1,4 @@
-package com.chong.arcmenudemo;
+package com.chong.arclayout;
 
 import org.junit.Test;
 

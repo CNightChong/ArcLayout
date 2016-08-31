@@ -1,4 +1,4 @@
-package com.chong.arcmenudemo;
+package com.chong.arclayout;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MainActivity extends Activity {
     private ListView mListView;
-    private ArcMenu mArcMenu;
+    private ArcLayout mArcLayout;
     private ImageView mIvMain;
     private List<String> mData;
 
@@ -45,21 +45,21 @@ public class MainActivity extends Activity {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                if (mArcMenu.isOpen())
-                    mArcMenu.toggleMenu(600);
+                if (mArcLayout.isOpen())
+                    mArcLayout.toggleMenu(600);
             }
         });
 
-        mArcMenu.setOnMenuItemClickListener(new ArcMenu.OnMenuItemClickListener() {
+        mArcLayout.setOnMenuItemClickListener(new ArcLayout.OnMenuItemClickListener() {
             @Override
             public void onItemClick(View view, int pos) {
                 Toast.makeText(MainActivity.this, pos + ":" + view.getTag(), Toast.LENGTH_SHORT).show();
             }
         });
-        mArcMenu.setOnMainMenuItemClickListener(new ArcMenu.OnMainMenuItemClickListener() {
+        mArcLayout.setOnMainMenuItemClickListener(new ArcLayout.OnMainMenuItemClickListener() {
             @Override
-            public void onMainClick(View view, ArcMenu.Status status) {
-                if (status == ArcMenu.Status.CLOSE) {
+            public void onMainClick(View view, ArcLayout.Status status) {
+                if (status == ArcLayout.Status.CLOSE) {
                     mIvMain.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.shequ_img_sent));
                 } else {
                     mIvMain.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.shequ_ic_fatie_guanbi));
@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
 
     private void initView() {
         mListView = (ListView) findViewById(R.id.id_listview);
-        mArcMenu = (ArcMenu) findViewById(R.id.id_menu);
+        mArcLayout = (ArcLayout) findViewById(R.id.id_menu);
         mIvMain = (ImageView) findViewById(R.id.iv_main);
     }
 

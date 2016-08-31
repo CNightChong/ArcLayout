@@ -1,4 +1,4 @@
-package com.chong.arcmenudemo;
+package com.chong.arclayout;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,7 +17,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
 
-public class ArcMenu extends ViewGroup implements OnClickListener {
+public class ArcLayout extends ViewGroup implements OnClickListener {
     private static final int POS_LEFT_TOP = 0;
     private static final int POS_LEFT_BOTTOM = 1;
     private static final int POS_RIGHT_TOP = 2;
@@ -74,24 +74,24 @@ public class ArcMenu extends ViewGroup implements OnClickListener {
     }
 
 
-    public ArcMenu(Context context) {
+    public ArcLayout(Context context) {
         this(context, null);
     }
 
-    public ArcMenu(Context context, AttributeSet attrs) {
+    public ArcLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ArcMenu(Context context, AttributeSet attrs, int defStyle) {
+    public ArcLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         mRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 100, getResources().getDisplayMetrics());
 
         // 获取自定义属性的值
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ArcMenu);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ArcLayout);
 
-        int pos = a.getInt(R.styleable.ArcMenu_position, POS_RIGHT_BOTTOM);
+        int pos = a.getInt(R.styleable.ArcLayout_position, POS_RIGHT_BOTTOM);
         switch (pos) {
             case POS_LEFT_TOP:
                 mPosition = Position.LEFT_TOP;
@@ -106,7 +106,7 @@ public class ArcMenu extends ViewGroup implements OnClickListener {
                 mPosition = Position.RIGHT_BOTTOM;
                 break;
         }
-        mRadius = (int) a.getDimension(R.styleable.ArcMenu_radius, TypedValue
+        mRadius = (int) a.getDimension(R.styleable.ArcLayout_radius, TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100,
                         getResources().getDisplayMetrics()));
 
