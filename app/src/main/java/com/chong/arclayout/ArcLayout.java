@@ -353,7 +353,7 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
     /**
      * 添加menuItem的点击动画
      *
-     * @param pos
+     * @param pos 按钮序号
      */
     private void menuItemAnim(int pos) {
         for (int i = 0; i < getChildCount() - 1; i++) {
@@ -409,8 +409,8 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
     /**
      * 为当前点击的Item设置变大和透明度降低的动画
      *
-     * @param duration
-     * @return
+     * @param duration 动画持续时间
+     * @return 动画
      */
     private Animation scaleBigAnim(int duration, final View view) {
         AnimationSet animationSet = new AnimationSet(true);
