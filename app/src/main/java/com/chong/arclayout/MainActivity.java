@@ -16,6 +16,7 @@ import java.util.List;
 public class MainActivity extends Activity {
     private ListView mListView;
     private ArcLayout mArcLayout;
+    private ArcLayout mArcLayout2;
     private ImageView mIvMain;
     private List<String> mData;
 
@@ -53,8 +54,8 @@ public class MainActivity extends Activity {
 
         mArcLayout.setOnMenuItemClickListener(new ArcLayout.OnMenuItemClickListener() {
             @Override
-            public void onItemClick(View view, int pos) {
-                Toast.makeText(MainActivity.this, pos + ":" + view.getTag(), Toast.LENGTH_SHORT).show();
+            public void onItemClick(View view, int position) {
+                Toast.makeText(MainActivity.this, position + ":" + view.getTag(), Toast.LENGTH_SHORT).show();
                 mIvMain.setImageResource(R.drawable.shequ_img_sent);
             }
         });
@@ -69,6 +70,22 @@ public class MainActivity extends Activity {
                 return true; // 需要展开，返回true
             }
         });
+
+        mArcLayout2.setOnMainMenuItemClickListener(new ArcLayout.OnMainMenuItemClickListener() {
+
+            @Override
+            public boolean onMainClick(View view, ArcLayout.Status status) {
+                Toast.makeText(MainActivity.this, "menu_left_top clicked", Toast.LENGTH_SHORT).show();
+                return false; // 不需要展开，返回false
+            }
+        });
+        mArcLayout2.setOnMenuItemClickListener(new ArcLayout.OnMenuItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(MainActivity.this, position + ":" + view.getTag(), Toast.LENGTH_SHORT).show();
+                mIvMain.setImageResource(R.drawable.shequ_img_sent);
+            }
+        });
     }
 
     private void initData() {
@@ -81,8 +98,9 @@ public class MainActivity extends Activity {
     }
 
     private void initView() {
-        mListView = (ListView) findViewById(R.id.id_listview);
-        mArcLayout = (ArcLayout) findViewById(R.id.id_menu);
+        mListView = (ListView) findViewById(R.id.lv);
+        mArcLayout = (ArcLayout) findViewById(R.id.menu_right_bottom);
+        mArcLayout2 = (ArcLayout) findViewById(R.id.menu_left_top);
         mIvMain = (ImageView) findViewById(R.id.iv_main);
     }
 
