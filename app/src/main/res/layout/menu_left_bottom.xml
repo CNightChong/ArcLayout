@@ -4,8 +4,8 @@
                                android:layout_height="wrap_content"
                                android:paddingBottom="20dp"
                                android:paddingLeft="20dp"
-                               app:position="left_bottom"
-                               app:radius="100dp">
+                               app:arc_radius="100dp"
+                               app:location="left_bottom">
 
     <ImageView
         android:layout_width="wrap_content"

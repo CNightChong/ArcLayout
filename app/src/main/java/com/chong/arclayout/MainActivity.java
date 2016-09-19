@@ -60,12 +60,13 @@ public class MainActivity extends Activity {
         });
         mArcLayout.setOnMainMenuItemClickListener(new ArcLayout.OnMainMenuItemClickListener() {
             @Override
-            public void onMainClick(View view, ArcLayout.Status status) {
-                if (status == ArcLayout.Status.CLOSE) {
+            public boolean onMainClick(View view, ArcLayout.Status status) {
+                if (status == ArcLayout.Status.OPEN) { //当前展开状态，->关闭
                     mIvMain.setImageResource(R.drawable.shequ_img_sent);
-                } else {
+                } else { // 当前关闭状态，->展开
                     mIvMain.setImageResource(R.drawable.shequ_ic_fatie_guanbi);
                 }
+                return true; // 需要展开，返回true
             }
         });
     }

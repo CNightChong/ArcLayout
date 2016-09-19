@@ -18,23 +18,37 @@ import android.view.animation.TranslateAnimation;
 
 
 public class ArcLayout extends ViewGroup implements OnClickListener {
-    private static final int POS_LEFT_TOP = 0;
-    private static final int POS_LEFT_BOTTOM = 1;
-    private static final int POS_RIGHT_TOP = 2;
-    private static final int POS_RIGHT_BOTTOM = 3;
-
-    private Position mPosition = Position.RIGHT_BOTTOM;
-    private int mRadius;
-
+    private static final int LOCATION_LEFT_TOP = 0;
+    private static final int LOCATION_LEFT_BOTTOM = 1;
+    private static final int LOCATION_RIGHT_TOP = 2;
+    private static final int LOCATION_RIGHT_BOTTOM = 3;
 
     /**
-     * 菜单的状态
+     * 主按钮位置，默认右下
+     */
+    private Location mLocation = Location.RIGHT_BOTTOM;
+    /**
+     * 展开弧形半径
+     */
+    private int mRadius;
+
+    /**
+     * 展开关闭动画持续时间，默认300ms
+     */
+    private int mAnimDuration = 300;
+    /**
+     * 子菜单点击后缩放动画的持续时间，默认300ms
+     */
+    private int mScaleAnimDuration = 300;
+
+    /**
+     * 菜单的状态，默认关闭
      */
     private Status mCurrentStatus = Status.CLOSE;
     /**
      * 菜单的主按钮
      */
-    private View mMainButton;
+    private View mMainView;
 
     private OnMenuItemClickListener mMenuItemClickListener;
 
@@ -47,7 +61,7 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
     /**
      * 菜单的位置枚举类
      */
-    public enum Position {
+    public enum Location {
         LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM
     }
 
@@ -55,7 +69,7 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
      * 点击子菜单项的回调接口
      */
     public interface OnMenuItemClickListener {
-        void onItemClick(View view, int pos);
+        void onItemClick(View view, int position);
     }
 
     public void setOnMenuItemClickListener(OnMenuItemClickListener mMenuItemClickListener) {
@@ -66,12 +80,24 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
      * 点击主按钮项的回调接口
      */
     public interface OnMainMenuItemClickListener {
-        void onMainClick(View view, Status status);
+        /**
+         * 主按钮项点击事件
+         *
+         * @param view   主按钮
+         * @param status 当前展开关闭状态
+         * @return true 需要展开;false 不需要展开
+         */
+        boolean onMainClick(View view, Status status);
     }
 
     public void setOnMainMenuItemClickListener(OnMainMenuItemClickListener onMainMenuItemClickListener) {
         mOnMainMenuItemClickListener = onMainMenuItemClickListener;
     }
+
+    /**
+     * 主按钮点击后是否需要展开
+     */
+    private boolean isNeedOpen = true;
 
 
     public ArcLayout(Context context) {
@@ -91,26 +117,26 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
         // 获取自定义属性的值
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ArcLayout);
 
-        int pos = a.getInt(R.styleable.ArcLayout_position, POS_RIGHT_BOTTOM);
-        switch (pos) {
-            case POS_LEFT_TOP:
-                mPosition = Position.LEFT_TOP;
+        int location = a.getInt(R.styleable.ArcLayout_location, LOCATION_RIGHT_BOTTOM);
+        switch (location) {
+            case LOCATION_LEFT_TOP:
+                mLocation = Location.LEFT_TOP;
                 break;
-            case POS_LEFT_BOTTOM:
-                mPosition = Position.LEFT_BOTTOM;
+            case LOCATION_LEFT_BOTTOM:
+                mLocation = Location.LEFT_BOTTOM;
                 break;
-            case POS_RIGHT_TOP:
-                mPosition = Position.RIGHT_TOP;
+            case LOCATION_RIGHT_TOP:
+                mLocation = Location.RIGHT_TOP;
                 break;
-            case POS_RIGHT_BOTTOM:
-                mPosition = Position.RIGHT_BOTTOM;
+            case LOCATION_RIGHT_BOTTOM:
+                mLocation = Location.RIGHT_BOTTOM;
                 break;
         }
-        mRadius = (int) a.getDimension(R.styleable.ArcLayout_radius, TypedValue
+        mRadius = (int) a.getDimension(R.styleable.ArcLayout_arc_radius, TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100,
                         getResources().getDisplayMetrics()));
-
-        Log.e("TAG", "position = " + mPosition + " , radius =  " + mRadius);
+        mAnimDuration = a.getInt(R.styleable.ArcLayout_anim_duration, mAnimDuration);
+        mScaleAnimDuration = a.getInt(R.styleable.ArcLayout_anim_duration, mScaleAnimDuration);
 
         a.recycle();
 
@@ -172,25 +198,25 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
                 int childHeight = child.getMeasuredHeight();
 
                 // 左上
-                if (mPosition == Position.LEFT_TOP) {
+                if (mLocation == Location.LEFT_TOP) {
                     childLeft = getPaddingLeft() + childLeft;
                     childTop = getPaddingTop() + childTop;
                 }
 
                 // 左下
-                if (mPosition == Position.LEFT_BOTTOM) {
+                if (mLocation == Location.LEFT_BOTTOM) {
                     childLeft = getPaddingLeft() + getPaddingRight() + childLeft;
                     childTop = getMeasuredHeight() - childHeight - childTop - getPaddingTop() - getPaddingBottom();
                 }
 
                 // 右上
-                if (mPosition == Position.RIGHT_TOP) {
+                if (mLocation == Location.RIGHT_TOP) {
                     childLeft = getMeasuredWidth() - childWidth - childLeft - getPaddingLeft() - getPaddingRight();
                     childTop = getPaddingTop() + getPaddingBottom() + childTop;
                 }
 
                 // 右下
-                if (mPosition == Position.RIGHT_BOTTOM) {
+                if (mLocation == Location.RIGHT_BOTTOM) {
                     childLeft = getMeasuredWidth() - childWidth - childLeft - getPaddingLeft() - getPaddingRight();
                     childTop = getMeasuredHeight() - childHeight - childTop - getPaddingTop() - getPaddingBottom();
                 }
@@ -207,16 +233,16 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
      * 定位主菜单按钮
      */
     private void layoutMainButton() {
-        mMainButton = getChildAt(0);
-        mMainButton.setOnClickListener(this);
+        mMainView = getChildAt(0);
+        mMainView.setOnClickListener(this);
 
         int l = getPaddingLeft();
         int t = getPaddingTop();
 
-        int width = mMainButton.getMeasuredWidth();
-        int height = mMainButton.getMeasuredHeight();
+        int width = mMainView.getMeasuredWidth();
+        int height = mMainView.getMeasuredHeight();
 
-        switch (mPosition) {
+        switch (mLocation) {
             case LEFT_TOP:
                 l = getPaddingLeft();
                 t = getPaddingTop();
@@ -234,19 +260,20 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
                 t = getMeasuredHeight() - height - getPaddingBottom() - getPaddingTop();
                 break;
         }
-        mMainButton.layout(l, t, l + width, t + height);
+        mMainView.layout(l, t, l + width, t + height);
     }
 
     @Override
     public void onClick(View v) {
-//        rotateMainButton(v, 0f, 360f, 300);
-
-        toggleMenu(300);
 
         if (mOnMainMenuItemClickListener != null) {
-            mOnMainMenuItemClickListener.onMainClick(v, mCurrentStatus);
+            isNeedOpen = mOnMainMenuItemClickListener.onMainClick(v, mCurrentStatus);
         }
 
+        if (isNeedOpen) {
+            toggleMenu(mAnimDuration);
+//            rotateMainButton(v, 0f, 360f, mAnimDuration);
+        }
     }
 
     /**
@@ -263,15 +290,15 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
             int childLeft = (int) (mRadius * Math.sin(Math.PI / 2 / (count - 2) * i));
             int childTop = (int) (mRadius * Math.cos(Math.PI / 2 / (count - 2) * i));
 
-            int xflag = 1;
-            int yflag = 1;
+            int xFlag = 1;
+            int yFlag = 1;
 
-            if (mPosition == Position.LEFT_TOP || mPosition == Position.LEFT_BOTTOM) {
-                xflag = -1;
+            if (mLocation == Location.LEFT_TOP || mLocation == Location.LEFT_BOTTOM) {
+                xFlag = -1;
             }
 
-            if (mPosition == Position.LEFT_TOP || mPosition == Position.RIGHT_TOP) {
-                yflag = -1;
+            if (mLocation == Location.LEFT_TOP || mLocation == Location.RIGHT_TOP) {
+                yFlag = -1;
             }
 
             AnimationSet animationSet = new AnimationSet(true);
@@ -282,14 +309,14 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
 
             if (mCurrentStatus == Status.CLOSE) {
                 // to open
-                tranAnim = new TranslateAnimation(xflag * childLeft, 0, yflag * childTop, 0);
+                tranAnim = new TranslateAnimation(xFlag * childLeft, 0, yFlag * childTop, 0);
                 alphaAnim = new AlphaAnimation(0f, 1f);
                 childView.setClickable(true);
                 childView.setFocusable(true);
 
             } else {
                 // to close
-                tranAnim = new TranslateAnimation(0, xflag * childLeft, 0, yflag * childTop);
+                tranAnim = new TranslateAnimation(0, xFlag * childLeft, 0, yFlag * childTop);
                 alphaAnim = new AlphaAnimation(1f, 0f);
                 childView.setClickable(false);
                 childView.setFocusable(false);
@@ -334,15 +361,15 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
             childView.startAnimation(animationSet);
 
             // 子菜单点击
-            final int pos = i + 1;
+            final int position = i + 1;
             childView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mMenuItemClickListener != null) {
-                        mMenuItemClickListener.onItemClick(childView, pos);
+                        mMenuItemClickListener.onItemClick(childView, position);
                     }
                     changeStatus();
-                    menuItemAnim(pos - 1);
+                    menuItemAnim(position - 1);
                 }
             });
         }
@@ -353,16 +380,16 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
     /**
      * 添加menuItem的点击动画
      *
-     * @param pos 按钮序号
+     * @param position menu position
      */
-    private void menuItemAnim(int pos) {
+    private void menuItemAnim(int position) {
         for (int i = 0; i < getChildCount() - 1; i++) {
 
             final View childView = getChildAt(i + 1);
-            if (i == pos) {
-                childView.startAnimation(scaleBigAnim(300, childView));
+            if (i == position) {
+                childView.startAnimation(scaleBigAnim(mScaleAnimDuration, childView));
             } else {
-                childView.startAnimation(scaleSmallAnim(300, childView));
+                childView.startAnimation(scaleSmallAnim(mScaleAnimDuration, childView));
             }
 
             childView.setClickable(false);
@@ -471,5 +498,17 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
 
     public Status getCurrentStatus() {
         return mCurrentStatus;
+    }
+
+    public void setAnimDuration(int animDuration) {
+        mAnimDuration = animDuration;
+    }
+
+    public void setScaleAnimDuration(int scaleAnimDuration) {
+        mScaleAnimDuration = scaleAnimDuration;
+    }
+
+    public View getMainView() {
+        return mMainView;
     }
 }

@@ -3,10 +3,10 @@
                                android:id="@+id/id_menu"
                                android:layout_width="wrap_content"
                                android:layout_height="wrap_content"
-                               android:paddingBottom="50dp"
-                               android:paddingRight="50dp"
-                               app:position="right_bottom"
-                               app:radius="140dp">
+                               android:paddingBottom="20dp"
+                               android:paddingRight="20dp"
+                               app:arc_radius="140dp"
+                               app:location="right_bottom">
 
     <ImageView
         android:id="@+id/iv_main"
