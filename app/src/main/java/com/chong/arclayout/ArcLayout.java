@@ -181,7 +181,7 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (changed) {
-            layoutMainButton();
+            layoutMainView();
 
             int count = getChildCount();
 
@@ -231,7 +231,7 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
     /**
      * 定位主菜单按钮
      */
-    private void layoutMainButton() {
+    private void layoutMainView() {
         mMainView = getChildAt(0);
         mMainView.setOnClickListener(this);
 
@@ -271,7 +271,7 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
 
         if (isNeedOpen) {
             toggleMenu(mAnimDuration);
-//            rotateMainButton(v, 0f, 360f, mAnimDuration);
+//            rotateMainView(v, 0f, 360f, mAnimDuration);
         }
     }
 
@@ -485,7 +485,7 @@ public class ArcLayout extends ViewGroup implements OnClickListener {
     }
 
 
-    private void rotateMainButton(View v, float start, float end, int duration) {
+    private void rotateMainView(View v, float start, float end, int duration) {
 
         RotateAnimation anim = new RotateAnimation(start, end,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
