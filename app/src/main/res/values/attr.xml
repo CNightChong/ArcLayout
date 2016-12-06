@@ -8,8 +8,11 @@
             <enum name="right_bottom" value="3"/>
         </attr>
         <attr name="arc_radius" format="dimension|reference"/>
-        <attr name="anim_duration" format="integer"/>
+        <attr name="anim_open_duration" format="integer"/>
+        <attr name="anim_close_duration" format="integer"/>
         <attr name="scale_anim_duration" format="integer"/>
+        <attr name="x_padding" format="dimension|reference"/>
+        <attr name="y_padding" format="dimension|reference"/>
     </declare-styleable>
 
 </resources>
