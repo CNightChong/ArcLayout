@@ -1,10 +1,11 @@
 <com.chong.arclayout.ArcLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_left_top"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:arc_radius="100dp"
-    app:location="left_bottom">
+    app:location="left_top">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -14,9 +15,8 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/composer_music"
-        android:tag="Music"/>
-
+        android:src="@drawable/composer_sleep"
+        android:tag="Sleep"/>
 
     <ImageView
         android:layout_width="wrap_content"
